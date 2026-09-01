@@ -4,7 +4,6 @@ on:
 push:
 branches:
 - main
-
 pull_request:
 branches:
 - main
@@ -13,35 +12,28 @@ jobs:
 test-and-security:
 runs-on: ubuntu-latest
 
-```
 steps:
-  # 1. Checkout source code
   - name: Checkout source code
     uses: actions/checkout@v5
 
-  # 2. Install Python
   - name: Set up Python
     uses: actions/setup-python@v6
     with:
       python-version: "3.12"
 
-  # 3. Install pytest
   - name: Install pytest
     run: |
       python -m pip install --upgrade pip
       pip install pytest
 
-  # 4. Run unit tests
   - name: Run tests
     run: |
       PYTHONPATH=. pytest
 
-  # 5. Build Docker image
   - name: Build Docker image
     run: |
       docker build -t supplychain-guardian:${{ github.sha }} .
 
-  # 6. Scan Docker image with Trivy
   - name: Run Trivy vulnerability scan
     uses: aquasecurity/trivy-action@0.33.1
     with:
@@ -49,4 +41,4 @@ steps:
       format: "table"
       severity: "HIGH,CRITICAL"
       ignore-unfixed: true
-```
+
